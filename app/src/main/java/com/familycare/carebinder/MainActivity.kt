@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -633,6 +634,7 @@ private fun ScheduleEditor(value: ScheduleInput, onChange: (ScheduleInput) -> Un
 
 @Composable
 private fun AppearanceEditor(iconKey: String, colorKey: String, onChange: (String, String) -> Unit) {
+    val selectedColor = eventColors[colorKey] ?: eventColors.getValue("teal")
     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)) {
         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text(ui("Event appearance"), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
@@ -640,20 +642,28 @@ private fun AppearanceEditor(iconKey: String, colorKey: String, onChange: (Strin
             eventIcons.chunked(4).forEach { row ->
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     row.forEach { (key, glyph) ->
-                        if (iconKey == key) Button({ onChange(key, colorKey) }, Modifier.weight(1f)) { Text("$glyph ${key.take(3)}") }
-                        else OutlinedButton({ onChange(key, colorKey) }, Modifier.weight(1f)) { Text("$glyph ${key.take(3)}") }
+                        if (iconKey == key) Button({ onChange(key, colorKey) }, Modifier.weight(1f)) { Text("$glyph ${key.take(3)}", color = selectedColor) }
+                        else OutlinedButton({ onChange(key, colorKey) }, Modifier.weight(1f)) { Text("$glyph ${key.take(3)}", color = selectedColor) }
                     }
                 }
             }
             eventColors.entries.chunked(4).forEach { row ->
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     row.forEach { (key, color) ->
-                        if (colorKey == key) Button({ onChange(iconKey, key) }, Modifier.weight(1f)) { Text("● ${key.take(3)}", color = color) }
-                        else OutlinedButton({ onChange(iconKey, key) }, Modifier.weight(1f)) { Text("● ${key.take(3)}", color = color) }
+                        if (colorKey == key) Button({ onChange(iconKey, key) }, Modifier.weight(1f)) { ColorChoiceLabel(key, color) }
+                        else OutlinedButton({ onChange(iconKey, key) }, Modifier.weight(1f)) { ColorChoiceLabel(key, color) }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ColorChoiceLabel(key: String, color: Color) {
+    Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+        Surface(color = color, shape = MaterialTheme.shapes.extraSmall, modifier = Modifier.size(16.dp)) {}
+        Text(key.take(3), color = color)
     }
 }
 
