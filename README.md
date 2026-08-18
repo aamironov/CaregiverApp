@@ -2,6 +2,8 @@
 
 CareBinder is a phone-first, consumer caregiving organizer. It turns appointment paperwork, discharge documents, and caregiver voice notes into an **editable** action plan, family update, and care timeline.
 
+Current release: **0.0.1**.
+
 ## Product boundary
 
 CareBinder organizes user-provided information. It is not a diagnostic, treatment, medication-safety, or emergency-response service. Every AI-created task, medication item, deadline, or summary must be shown to the caregiver for confirmation before it is saved, scheduled, or shared.
@@ -49,3 +51,12 @@ When `BYTEZ_API_KEY` is configured on the backend, Bytez extracts text from docu
 After the first authenticated synchronization, Android and web clients retain an encrypted snapshot of the profile, drafts, and complete event/task timeline for offline reading. Offline caching needs no provider credential; server changes, AI extraction/translation, and synchronization require a connection. Local snapshots are removed on sign-out or account deletion.
 
 For a Docker Compose VPS deployment with automatic HTTPS, server-only secrets, persistent SQLite storage, health checks, and backups, see [the VPS deployment guide](deploy/vps/README.md).
+
+## Continuous build
+
+GitHub Actions validates every push and pull request to `main`. The workflow runs the backend Maven test suite and the Android unit tests using Java 17. You can run the same checks locally:
+
+```bash
+cd backend && mvn verify
+./gradlew testDebugUnitTest
+```
