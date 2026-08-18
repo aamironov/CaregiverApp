@@ -1,0 +1,13 @@
+.android-sdk/
+.m2/
+.gradle/
+.kotlin/
+**/build/
+**/target/
+backend/data/
+local.properties
+*.db
+*.db-shm
+*.db-wal
+deploy/vps/.env
+deploy/vps/backups/

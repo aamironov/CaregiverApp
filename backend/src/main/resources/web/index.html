@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f4f0e8">
+  <title>CareBinder</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <main id="auth-view" class="auth-shell">
+    <section class="auth-copy">
+      <p class="eyebrow">CareBinder</p>
+      <h1>Keep the next steps from getting lost.</h1>
+      <p>Turn notes after a care event into a plan you review, confirm, and share on your terms.</p>
+      <div class="trust-card"><strong>You stay in control.</strong><span>Nothing is confirmed or shared until you review it.</span></div>
+    </section>
+    <section class="auth-card" aria-labelledby="auth-title">
+      <div class="segmented" role="tablist" aria-label="Account action">
+        <button class="segment active" id="login-tab" type="button">Sign in</button>
+        <button class="segment" id="register-tab" type="button">Create account</button>
+      </div>
+      <h2 id="auth-title">Welcome back</h2>
+      <div id="google-auth" class="google-auth hidden">
+        <div id="google-signin-button"></div>
+        <div class="auth-divider"><span>or use email</span></div>
+      </div>
+      <form id="auth-form">
+        <label>Email<input id="auth-email" type="email" autocomplete="email" required></label>
+        <label>Password<input id="auth-password" type="password" autocomplete="current-password" minlength="8" required></label>
+        <p class="form-error" id="auth-error" role="alert"></p>
+        <button class="primary" id="auth-submit" type="submit">Sign in</button>
+      </form>
+      <p class="fine-print">Google verifies your identity; your care information remains in your configured CareBinder backend.</p>
+    </section>
+  </main>
+
+  <div id="app-view" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">CB</span><span>CareBinder</span></div>
+      <nav id="desktop-nav" aria-label="Main navigation"></nav>
+      <div class="sidebar-foot">
+        <button id="theme-button" class="quiet" type="button">Appearance: System</button>
+        <p>CareBinder organizes information. It does not provide medical advice.</p>
+      </div>
+    </aside>
+    <main class="workspace">
+      <header class="topbar">
+        <div><p class="eyebrow" id="context-label">Care plan</p><h1 id="page-title">Today</h1></div>
+        <button id="add-button" class="primary compact" type="button">+ Add care event</button>
+      </header>
+      <section id="page" class="page" tabindex="-1"></section>
+    </main>
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Main navigation"></nav>
+  </div>
+
+  <dialog id="confirm-dialog">
+    <form method="dialog" class="dialog-card">
+      <h2 id="dialog-title">Confirm</h2>
+      <p id="dialog-message"></p>
+      <div class="dialog-actions">
+        <button value="cancel" class="secondary">Cancel</button>
+        <button value="confirm" id="dialog-confirm" class="danger">Confirm</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>

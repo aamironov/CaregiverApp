@@ -1,0 +1,18 @@
+{
+	email {$ACME_EMAIL}
+	admin off
+}
+
+{$APP_DOMAIN} {
+	encode zstd gzip
+
+	header {
+		-Server
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Frame-Options "DENY"
+		Permissions-Policy "camera=(self), microphone=(self), geolocation=()"
+		Access-Control-Allow-Origin "https://{$APP_DOMAIN}"
+	}
+
+	reverse_proxy backend:8080
+}

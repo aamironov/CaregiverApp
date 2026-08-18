@@ -1,0 +1,58 @@
+name: carebinder
+
+services:
+  backend:
+    build:
+      context: ../../backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      PORT: "8080"
+      CAREBINDER_DB: /data/carebinder.db
+      GOOGLE_CLIENT_IDS: ${GOOGLE_CLIENT_IDS:-}
+      BYTEZ_API_KEY: ${BYTEZ_API_KEY:-}
+      BYTEZ_PROVIDER_KEY: ${BYTEZ_PROVIDER_KEY:-}
+      BYTEZ_BASE_URL: ${BYTEZ_BASE_URL:-https://api.bytez.com/models/v2}
+      BYTEZ_DOCUMENT_MODEL: ${BYTEZ_DOCUMENT_MODEL:-Qwen/Qwen2.5-VL-7B-Instruct}
+      BYTEZ_SPEECH_MODEL: ${BYTEZ_SPEECH_MODEL:-openai/whisper-large-v3-turbo}
+      BYTEZ_TRANSLATION_MODEL: ${BYTEZ_TRANSLATION_MODEL:-Qwen/Qwen3-4B}
+    volumes:
+      - carebinder_data:/data
+    expose:
+      - "8080"
+    networks:
+      - private
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/v1/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?Set APP_DOMAIN in .env}
+      ACME_EMAIL: ${ACME_EMAIL:?Set ACME_EMAIL in .env}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - private
+
+networks:
+  private:
+
+volumes:
+  carebinder_data:
+  caddy_data:
+  caddy_config:
